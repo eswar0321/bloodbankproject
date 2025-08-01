@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank Management System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+    /* Minimalistic Color Palette */
+    --primary: #6366f1;
+    --primary-light: #8b5cf6;
+    --primary-dark: #4338ca;
+    --secondary: #ec4899;
+    --accent: #06b6d4;
+    
+    /* Neutral Colors */
+    --neutral-50: #f8fafc;
+    --neutral-100: #f1f5f9;
+    --neutral-200: #e2e8f0;
+    --neutral-300: #cbd5e1;
+    --neutral-400: #94a3b8;
+    --neutral-500: #64748b;
+    --neutral-600: #475569;
+    --neutral-700: #334155;
+    --neutral-800: #1e293b;
+    --neutral-900: #0f172a;
+    
+    /* Semantic Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+    
+    /* Background */
+    --bg-primary: #fafbfc;
+    --bg-secondary: #ffffff;
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    
+    /* Text */
+    --text-primary: var(--neutral-900);
+    --text-secondary: var(--neutral-600);
+    --text-tertiary: var(--neutral-400);
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1);
+    
+    /* Border Radius */
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Subtle Background Animation */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(236, 72, 153, 0.05) 0%, transparent 50%);
+    z-index: -2;
+    animation: subtleFloat 20s ease-in-out infinite;
+}
+
+@keyframes subtleFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(1deg); }
+}
+
+/* Floating Particles */
+.particle-system {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--primary);
+    border-radius: 50%;
+    opacity: 0.2;
+    animation: particleFloat 15s infinite ease-in-out;
+}
+
+.particle:nth-child(even) {
+    background: var(--secondary);
+    animation-delay: -5s;
+}
+
+.particle:nth-child(3n) {
+    background: var(--accent);
+    animation-delay: -10s;
+}
+
+@keyframes particleFloat {
+    0% {
+        transform: translateY(100vh) translateX(0) scale(0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    90% {
+        opacity: 0.2;
+    }
+    100% {
+        transform: translateY(-100vh) translateX(50px) scale(0);
+        opacity: 0;
+    }
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.header {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: 3rem 2rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--neutral-200);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.header:hover {
+    transform: translateY(-4px);
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.1), transparent);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.header h1 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.header h1:hover {
+    transform: scale(1.02);
+}
+
+.header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    font-weight: 400;
+    position: relative;
+    z-index: 2;
+}
+
+.nav-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--neutral-200);
+}
+
+.nav-tab {
+    background: transparent;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-tab::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.nav-tab:hover::before,
+.nav-tab.active::before {
+    opacity: 1;
+}
+
+.nav-tab:hover,
+.nav-tab.active {
+    color: white;
+    transform: translateY(-2px);
+}
+
+.tab-content {
+    display: none;
+    background: var(--bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--neutral-200);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.tab-content:hover {
+    transform: translateY(-2px);
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tab-content h2 {
+    color: var(--text-primary);
+    font-size: 1.875rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    text-align: center;
+    position: relative;
+}
+
+.tab-content h2::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.tab-content h2:hover::after {
+    width: 80px;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--neutral-300);
+    border-radius: var(--radius-md);
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    border: none;
+    padding: 0.875rem 2rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease;
+}
+
+.btn:hover::before {
+    width: 200px;
+    height: 200px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-xl);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.card {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--neutral-200);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.card:hover::before {
+    transform: scaleX(1);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card h3 {
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.blood-type {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+.status {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status.available { background: var(--success); color: white; }
+.status.critical { background: var(--warning); color: white; }
+.status.out-of-stock { background: var(--error); color: white; }
+.status.low { background: var(--warning); color: white; }
+.status.medium { background: var(--info); color: white; }
+.status.high { background: var(--warning); color: white; }
+.status.pending { background: var(--neutral-400); color: white; }
+.status.approved { background: var(--success); color: white; }
+.status.rejected { background: var(--error); color: white; }
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.stat-card {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: rotate(45deg);
+    animation: sparkle 4s infinite;
+}
+
+@keyframes sparkle {
+    0% { transform: translateX(-200%) translateY(-200%) rotate(45deg); }
+    100% { transform: translateX(200%) translateY(200%) rotate(45deg); }
+}
+
+.stat-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: var(--shadow-xl);
+}
+
+.stat-card h3 {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 2;
+}
+
+.stat-card p {
+    font-size: 1rem;
+    font-weight: 500;
+    position: relative;
+    z-index: 2;
+    opacity: 0.9;
+}
+
+.alert {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    border-radius: var(--radius-md);
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-left: 4px solid;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.alert.success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-left-color: var(--success);
+}
+
+.alert.error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+    border-left-color: var(--error);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.loading::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--neutral-200);
+    border-left-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .header {
+        padding: 2rem 1.5rem;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .nav-tabs {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .nav-tab {
+        width: 100%;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .tab-content {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-card h3 {
+        font-size: 2rem;
+    }
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--neutral-100);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-dark);
+}
+
+/* Focus indicators for accessibility */
+.nav-tab:focus,
+.btn:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+/* Form validation styles */
+.form-group input:valid {
+    border-color: var(--success);
+}
+
+.form-group input:invalid:not(:placeholder-shown) {
+    border-color: var(--error);
+}
+
+/* Reduced motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+    </style>
+</head>
+<body>
+    <!-- Particle System -->
+    <div class="particle-system"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🩸 Blood Bank Management</h1>
+            <p>Efficient • Modern • Life-Saving</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('dashboard')">Dashboard</button>
+            <button class="nav-tab" onclick="showTab('donors')">Donors</button>
+            <button class="nav-tab" onclick="showTab('recipients')">Recipients</button>
+            <button class="nav-tab" onclick="showTab('inventory')">Inventory</button>
+        </div>
+
+        <div id="dashboard" class="tab-content active">
+            <h2>Dashboard</h2>
+            <div id="dashboardStats" class="stats-grid">
+                <div class="stat-card">
+                    <h3 id="totalDonors">0</h3>
+                    <p>Total Donors</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalRecipients">0</h3>
+                    <p>Total Recipients</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="totalUnits">0</h3>
+                    <p>Blood Units Available</p>
+                </div>
+            </div>
+            <div id="bloodTypeStats" class="cards-container">
+                <!-- Blood type statistics will be populated here -->
+            </div>
+        </div>
+
+        <div id="donors" class="tab-content">
+            <h2>Donor Management</h2>
+            <div id="donorAlert"></div>
+            <form id="donorForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="donorName">Full Name</label>
+                        <input type="text" id="donorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donorAge">Age</label>
+                        <input type="number" id="donorAge" min="18" max="65" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donorBloodType">Blood Type</label>
+                        <select id="donorBloodType" required>
+                            <option value="">Select Blood Type</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="donorPhone">Phone Number</label>
+                        <input type="tel" id="donorPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donorEmail">Email</label>
+                        <input type="email" id="donorEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donorAddress">Address</label>
+                        <textarea id="donorAddress" rows="3" required></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Register Donor</button>
+            </form>
+            <div id="donorsList" class="cards-container">
+                <!-- Donors will be populated here -->
+            </div>
+        </div>
+
+        <div id="recipients" class="tab-content">
+            <h2>Recipient Management</h2>
+            <div id="recipientAlert"></div>
+            <form id="recipientForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recipientName">Full Name</label>
+                        <input type="text" id="recipientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientAge">Age</label>
+                        <input type="number" id="recipientAge" min="1" max="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientBloodType">Blood Type</label>
+                        <select id="recipientBloodType" required>
+                            <option value="">Select Blood Type</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recipientPhone">Phone Number</label>
+                        <input type="tel" id="recipientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientHospital">Hospital</label>
+                        <input type="text" id="recipientHospital" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recipientUnits">Units Required</label>
+                        <input type="number" id="recipientUnits" min="1" max="10" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="recipientUrgency">Urgency Level</label>
+                    <select id="recipientUrgency" required>
+                        <option value="">Select Urgency</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Register Recipient</button>
+            </form>
+            <div id="recipientsList" class="cards-container">
+                <!-- Recipients will be populated here -->
+            </div>
+        </div>
+
+        <div id="inventory" class="tab-content">
+            <h2>Blood Inventory</h2>
+            <div id="inventoryAlert"></div>
+            <form id="inventoryForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inventoryBloodType">Blood Type</label>
+                        <select id="inventoryBloodType" required>
+                            <option value="">Select Blood Type</option>
+                            <option value="A+">A+</option>
+                            <option value="A-">A-</option>
+                            <option value="B+">B+</option>
+                            <option value="B-">B-</option>
+                            <option value="AB+">AB+</option>
+                            <option value="AB-">AB-</option>
+                            <option value="O+">O+</option>
+                            <option value="O-">O-</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inventoryUnits">Units</label>
+                        <input type="number" id="inventoryUnits" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inventoryExpiryDate">Expiry Date</label>
+                        <input type="date" id="inventoryExpiryDate" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn">Add to Inventory</button>
+            </form>
+            <div id="inventoryList" class="cards-container">
+                <!-- Inventory will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particleSystem = document.querySelector('.particle-system');
+            
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particleSystem.appendChild(particle);
+            }
+        }
+
+        // API Base URL
+        const API_BASE = 'https://blood-bank-ol4n.onrender.com';
+
+        // Tab Management
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const navTabs = document.querySelectorAll('.nav-tab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            navTabs.forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Load data for active tab
+            switch(tabName) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'donors':
+                    loadDonors();
+                    break;
+                case 'recipients':
+                    loadRecipients();
+                    break;
+                case 'inventory':
+                    loadInventory();
+                    break;
+            }
+        }
+
+        // Utility Functions
+        function showAlert(containerId, message, type = 'success') {
+            const container = document.getElementById(containerId);
+            container.innerHTML = `<div class="alert ${type}">${message}</div>`;
+            setTimeout(() => {
+                container.innerHTML = '';
+            }, 5000);
+        }
+
+        function formatDate(dateString) {
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        // API Request Function
+        async function apiRequest(endpoint, method = 'GET', data = null) {
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            };
+            
+            if (data) {
+                options.body = JSON.stringify(data);
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/api${endpoint}`, options);
+                const result = await response.json();
+                
+                console.log('API Response Status:', response.status);
+                console.log('API Response Body:', result);
+                
+                if (!response.ok) {
+                    // Handle the new consistent error format
+                    if (result && !result.success) {
+                        throw new Error(result.error || 'Request failed');
+                    }
+                    // Handle validation errors specifically
+                    if (result.details && Array.isArray(result.details)) {
+                        const validationErrors = result.details.map(detail => detail.msg).join(', ');
+                        throw new Error(`Validation failed: ${validationErrors}`);
+                    }
+                    throw new Error(result.error || `HTTP ${response.status}: Request failed`);
+                }
+                
+                // Return the data from the consistent JSON response format
+                if (result.success && result.data !== undefined) {
+                    return result.data;
+                }
+                
+                // Fallback for endpoints that might not use the new format yet
+                return result;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // Dashboard Functions
+        async function loadDashboard() {
+            try {
+                // Use the stats endpoint from your backend
+                const stats = await apiRequest('/stats');
+                
+                // Update dashboard stats with the new response format
+                document.getElementById('totalDonors').textContent = stats.totalDonors;
+                document.getElementById('totalRecipients').textContent = stats.totalRecipients;
+                document.getElementById('totalUnits').textContent = stats.totalUnits;
+                
+                // Load inventory for blood type stats
+                const inventory = await apiRequest('/inventory');
+                displayBloodTypeStats(inventory);
+                
+            } catch (error) {
+                console.error('Failed to load dashboard:', error);
+                
+                // Fallback: try to load individual endpoints if stats endpoint fails
+                try {
+                    const [donors, recipients, inventory] = await Promise.all([
+                        apiRequest('/donors'),
+                        apiRequest('/recipients'),
+                        apiRequest('/inventory')
+                    ]);
+                    
+                    document.getElementById('totalDonors').textContent = donors.length || 0;
+                    document.getElementById('totalRecipients').textContent = recipients.length || 0;
+                    document.getElementById('totalUnits').textContent = inventory.reduce((sum, item) => sum + item.units, 0);
+                    
+                    displayBloodTypeStats(inventory);
+                } catch (fallbackError) {
+                    console.error('Failed to load dashboard with fallback:', fallbackError);
+                    // Set default values if everything fails
+                    document.getElementById('totalDonors').textContent = '0';
+                    document.getElementById('totalRecipients').textContent = '0';
+                    document.getElementById('totalUnits').textContent = '0';
+                }
+            }
+        }
+
+        function displayBloodTypeStats(inventory) {
+            const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+            const stats = {};
+            
+            bloodTypes.forEach(type => {
+                stats[type] = inventory.filter(item => item.bloodType === type).reduce((sum, item) => sum + item.units, 0);
+            });
+            
+            const container = document.getElementById('bloodTypeStats');
+            container.innerHTML = bloodTypes.map(type => `
+                <div class="card">
+                    <div class="blood-type">${type}</div>
+                    <h3>${stats[type]} Units</h3>
+                    <div class="status ${stats[type] > 10 ? 'available' : stats[type] > 5 ? 'critical' : 'out-of-stock'}">
+                        ${stats[type] > 10 ? 'Available' : stats[type] > 5 ? 'Critical' : 'Out of Stock'}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Donor Functions
+        async function loadDonors() {
+            try {
+                const donors = await apiRequest('/donors');
+                displayDonors(donors);
+            } catch (error) {
+                console.error('Failed to load donors:', error);
+            }
+        }
+
+        function displayDonors(donors) {
+            const container = document.getElementById('donorsList');
+            container.innerHTML = donors.map(donor => `
+                <div class="card">
+                    <h3>${donor.name}</h3>
+                    <div class="blood-type">${donor.bloodType}</div>
+                    <p><strong>Age:</strong> ${donor.age}</p>
+                    <p><strong>Phone:</strong> ${donor.phone}</p>
+                    <p><strong>Email:</strong> ${donor.email}</p>
+                    <p><strong>Address:</strong> ${donor.address}</p>
+                    <p><strong>Registered:</strong> ${formatDate(donor.createdAt)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Recipient Functions
+        async function loadRecipients() {
+            try {
+                const recipients = await apiRequest('/recipients');
+                displayRecipients(recipients);
+            } catch (error) {
+                console.error('Failed to load recipients:', error);
+            }
+        }
+
+        function displayRecipients(recipients) {
+            const container = document.getElementById('recipientsList');
+            container.innerHTML = recipients.map(recipient => `
+                <div class="card">
+                    <h3>${recipient.name}</h3>
+                    <div class="blood-type">${recipient.bloodType}</div>
+                    <p><strong>Age:</strong> ${recipient.age}</p>
+                    <p><strong>Phone:</strong> ${recipient.phone}</p>
+                    <p><strong>Hospital:</strong> ${recipient.hospital}</p>
+                    <p><strong>Units Required:</strong> ${recipient.unitsRequired}</p>
+                    <div class="status ${recipient.urgency.toLowerCase()}">${recipient.urgency}</div>
+                    <p><strong>Registered:</strong> ${formatDate(recipient.createdAt)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Inventory Functions
+        async function loadInventory() {
+            try {
+                const inventory = await apiRequest('/inventory');
+                displayInventory(inventory);
+            } catch (error) {
+                console.error('Failed to load inventory:', error);
+            }
+        }
+
+        function displayInventory(inventory) {
+            const container = document.getElementById('inventoryList');
+            container.innerHTML = inventory.map(item => `
+                <div class="card">
+                    <h3>Blood Type: ${item.bloodType}</h3>
+                    <p><strong>Units:</strong> ${item.units}</p>
+                    <p><strong>Expiry Date:</strong> ${formatDate(item.expiryDate)}</p>
+                    <p><strong>Added:</strong> ${formatDate(item.createdAt)}</p>
+                </div>
+            `).join('');
+        }
+
+        // Form Handlers
+        // Donor Form Handler
+        document.getElementById('donorForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('donorName').value.trim(),
+                age: parseInt(document.getElementById('donorAge').value),
+                bloodType: document.getElementById('donorBloodType').value,
+                phone: document.getElementById('donorPhone').value.trim(),
+                email: document.getElementById('donorEmail').value.trim().toLowerCase(),
+                address: document.getElementById('donorAddress').value.trim()
+            };
+            
+            // Client-side validation before sending
+            const errors = [];
+            
+            if (formData.name.length < 2 || formData.name.length > 100) {
+                errors.push('Name must be between 2 and 100 characters');
+            }
+            
+            if (formData.age < 18 || formData.age > 65) {
+                errors.push('Age must be between 18 and 65');
+            }
+            
+            const bloodTypes = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+            if (!bloodTypes.includes(formData.bloodType)) {
+                errors.push('Please select a valid blood type');
+            }
+            
+            if (formData.phone.length < 10 || formData.phone.length > 15) {
+                errors.push('Phone number must be between 10 and 15 characters');
+            }
+            
+            // Basic email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(formData.email)) {
+                errors.push('Please enter a valid email address');
+            }
+            
+            if (formData.address.length < 10 || formData.address.length > 200) {
+                errors.push('Address must be between 10 and 200 characters');
+            }
+            
+            if (errors.length > 0) {
+                showAlert('donorAlert', 'Validation errors: ' + errors.join(', '), 'error');
+                return;
+            }
+            
+            try {
+                console.log('Sending donor data:', formData);
+                const response = await apiRequest('/donors', 'POST', formData);
+                console.log('Response:', response);
+                
+                showAlert('donorAlert', 'Donor registered successfully!');
+                e.target.reset();
+                loadDonors();
+                loadDashboard();
+            } catch (error) {
+                console.error('Error details:', error);
+                
+                // Enhanced error handling
+                if (error.message && error.message.includes('validation')) {
+                    showAlert('donorAlert', `Validation failed. Please check all fields and try again. Error: ${error.message}`, 'error');
+                } else if (error.message && error.message.includes('email already exists')) {
+                    showAlert('donorAlert', 'A donor with this email address already exists.', 'error');
+                } else {
+                    showAlert('donorAlert', `Failed to register donor: ${error.message}`, 'error');
+                }
+            }
+        });
+
+        // Recipient Form Handler
+        document.getElementById('recipientForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('recipientName').value,
+                age: parseInt(document.getElementById('recipientAge').value),
+                bloodType: document.getElementById('recipientBloodType').value,
+                phone: document.getElementById('recipientPhone').value,
+                hospital: document.getElementById('recipientHospital').value,
+                unitsRequired: parseInt(document.getElementById('recipientUnits').value),
+                urgency: document.getElementById('recipientUrgency').value
+            };
+            
+            try {
+                await apiRequest('/recipients', 'POST', formData);
+                showAlert('recipientAlert', 'Recipient registered successfully!');
+                e.target.reset();
+                loadRecipients();
+                loadDashboard();
+            } catch (error) {
+                showAlert('recipientAlert', error.message, 'error');
+            }
+        });
+
+        // Inventory Form Handler
+        document.getElementById('inventoryForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = {
+                bloodType: document.getElementById('inventoryBloodType').value,
+                units: parseInt(document.getElementById('inventoryUnits').value),
+                expiryDate: document.getElementById('inventoryExpiryDate').value
+            };
+            
+            try {
+                await apiRequest('/inventory', 'POST', formData);
+                showAlert('inventoryAlert', 'Blood units added to inventory successfully!');
+                e.target.reset();
+                loadInventory();
+                loadDashboard();
+            } catch (error) {
+                showAlert('inventoryAlert', error.message, 'error');
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            loadDashboard();
+        });
+    </script>
+</body>
+</html>
